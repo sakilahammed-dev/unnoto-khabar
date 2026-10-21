@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+:root {
+  --primary-color: #f48721;
+  --primary-hover: #d97116;
+  --secondary-color: #041f1e;
+  --title-color: #222831;
+  --paragraph-color: #252a34;
+  --border-color: #fce7ec;
+  --bg-light: #fff5f7;
+  --bg-pink: #fff5f7;
+  --font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: #fff5f7;
+  color: var(--paragraph-color);
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Clean Running Marquee */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.animate-marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marquee 42s linear infinite;
+}
+
+.animate-marquee-slow:hover {
+  animation-play-state: paused;
+}
+
+/* Single Full Headline Marquee: Starts right, travels across, exits left completely, then restarts */
+@keyframes marquee-single-line {
+  0% {
+    transform: translate3d(100vw, 0, 0);
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+.animate-marquee-single {
+  display: inline-flex;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-single-line 20s linear infinite;
+}
+
+.animate-marquee-single:hover {
+  animation-play-state: paused;
+}
+
+/* Seamless Continuous Headline Marquee at 25s duration */
+@keyframes marquee-smooth {
+  0% {
+    transform: translate3d(0%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee-smooth {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-smooth 25s linear infinite;
+}
+
+.animate-marquee-smooth:hover {
+  animation-play-state: paused;
+}
+
+
+
