@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@700&display=swap');
+  body { margin: 0; padding: 0; background: transparent; }
+  svg { display: block; }
+  .bengali-text {
+    font-family: 'Hind Siliguri', sans-serif;
+    font-size: 27px;
+    font-weight: 700;
+    fill: #b91c1c;
+  }
+  .english-text {
+    font-family: 'Hind Siliguri', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    fill: #064e3b;
+    letter-spacing: 2.5px;
+  }
+</style>
+</head>
+<body>
+<svg width="240" height="240" viewBox="0 0 240 240">
+  <defs>
+    <!-- Top arc for 'বিশেষ অফার' -->
+    <path id="topArc" d="M 36,120 A 84,84 0 0,1 204,120" fill="none" />
+    <!-- Bottom arc for 'SPECIAL OFFERS' -->
+    <path id="bottomArc" d="M 38,120 A 82,82 0 0,0 202,120" fill="none" />
+  </defs>
+
+  <!-- Arched Bengali text -->
+  <text class="bengali-text">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">বিশেষ অফার</textPath>
+  </text>
+
+  <!-- Arched English text -->
+  <text class="english-text">
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">SPECIAL OFFERS</textPath>
+  </text>
+</svg>
+</body>
+</html>
