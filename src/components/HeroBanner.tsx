@@ -1,12 +1,15 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { HomeCategoryShowcase } from '@/components/HomeCategoryShowcase';
+import { getOfferProducts } from '@/data/catalog';
 
-const RUNNING_TICKER_TEXT =
-  '✦ উন্নত খাবার প্ল্যাটফর্মে আপনাকে স্বাগতম। ✦ আজকের বিশেষ অফার: ১ কেজি সুন্দরবনের খাঁটি চাকের মধু কিনলে ২৫% ডিসকাউন্ট এবং সারা দেশে ডেলিভারি চার্জ ফ্রি!';
+const toBanglaDigits = (num: number | string) => {
+  const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+  return num.toString().replace(/\d/g, (d) => banglaDigits[parseInt(d, 10)]);
+};
 
 const BANNERS = [
   {
@@ -18,6 +21,7 @@ const BANNERS = [
 ];
 
 export const HeroBanner: React.FC = () => {
+  const offerProducts = useMemo(() => getOfferProducts(), []);
   const [current, setCurrent] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const touchStartX = useRef<number | null>(null);
@@ -195,21 +199,70 @@ export const HeroBanner: React.FC = () => {
         <HomeCategoryShowcase />
       </div>
 
-      {/* রানিং হেডলাইন স্ট্রিপ (স্ক্রিনের একদম নিচে থাকবে) */}
+      {/* রানিং হেডলাইন স্ট্রিপ: সকল ডিসকাউন্ট ও বিশেষ অফার পণ্যের অবিরাম স্ক্রলিং */}
       <div className="w-full shrink-0 border-y border-amber-200/80 bg-gradient-to-r from-amber-50 via-orange-50/50 to-amber-50 py-1.5 sm:py-2 overflow-hidden flex items-center relative shadow-2xs select-none">
         {/* দুই পাশে হালকা ফেড ওভারলে */}
-        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-6 sm:w-10 bg-gradient-to-r from-amber-50 to-transparent z-10" />
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-6 sm:w-10 bg-gradient-to-l from-amber-50 to-transparent z-10" />
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 sm:w-14 bg-gradient-to-r from-amber-50 to-transparent z-10" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-14 bg-gradient-to-l from-amber-50 to-transparent z-10" />
 
         <div className="overflow-hidden w-full relative">
-          <div className="animate-marquee-single whitespace-nowrap flex items-center">
+          <div className="animate-marquee-ticker whitespace-nowrap flex items-center">
+            {/* Set 1 */}
             <div className="flex items-center shrink-0">
-              <span className="inline-flex items-center px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs sm:text-[13px] md:text-sm font-bold shadow-xs mr-3">
-                বিশেষ অফার
-              </span>
-              <span className="text-gray-900 tracking-wide text-xs sm:text-[15px] md:text-[16.5px] font-extrabold">
-                উন্নত খাবার প্ল্যাটফর্মে আপনাকে স্বাগতম। আজকের বিশেষ অফারে ১ কেজি সুন্দরবনের খাঁটি চাকের মধু কিনলে ২৫% ডিসকাউন্ট এবং সারাদেশে ডেলিভারি চার্জ ফ্রি!
-              </span>
+              {offerProducts.map((p) => {
+                const variant = p.variants[0];
+                return (
+                  <span
+                    key={`ticker-1-${p.id}`}
+                    onClick={() => {
+                      const el = document.getElementById(`product-${p.id}`) || document.getElementById('catalog-products-section');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center shrink-0 mx-3 sm:mx-5 cursor-pointer hover:opacity-85 transition"
+                  >
+                    <span className="text-amber-500 font-black mr-2 sm:mr-3 select-none text-sm sm:text-base">✦</span>
+                    <span className="text-gray-900 tracking-wide text-xs sm:text-[14px] md:text-[15px] font-bold">
+                      {p.banglaName}{' '}
+                      <span className="text-red-600 font-extrabold">
+                        {toBanglaDigits(p.discountPercentage || 0)}% ডিসকাউন্টে
+                      </span>{' '}
+                      এখন পাচ্ছেন মাত্র{' '}
+                      <span className="text-[#f48721] font-extrabold">
+                        {toBanglaDigits(variant.price)} টাকায়।
+                      </span>
+                    </span>
+                  </span>
+                );
+              })}
+            </div>
+
+            {/* Set 2 (১০০% নিরবচ্ছিন্ন ইনফিনিট লুপের জন্য হুবহু দ্বিতীয় সেট) */}
+            <div className="flex items-center shrink-0" aria-hidden="true">
+              {offerProducts.map((p) => {
+                const variant = p.variants[0];
+                return (
+                  <span
+                    key={`ticker-2-${p.id}`}
+                    onClick={() => {
+                      const el = document.getElementById(`product-${p.id}`) || document.getElementById('catalog-products-section');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center shrink-0 mx-3 sm:mx-5 cursor-pointer hover:opacity-85 transition"
+                  >
+                    <span className="text-amber-500 font-black mr-2 sm:mr-3 select-none text-sm sm:text-base">✦</span>
+                    <span className="text-gray-900 tracking-wide text-xs sm:text-[14px] md:text-[15px] font-bold">
+                      {p.banglaName}{' '}
+                      <span className="text-red-600 font-extrabold">
+                        {toBanglaDigits(p.discountPercentage || 0)}% ডিসকাউন্টে
+                      </span>{' '}
+                      এখন পাচ্ছেন মাত্র{' '}
+                      <span className="text-[#f48721] font-extrabold">
+                        {toBanglaDigits(variant.price)} টাকায়।
+                      </span>
+                    </span>
+                  </span>
+                );
+              })}
             </div>
           </div>
         </div>

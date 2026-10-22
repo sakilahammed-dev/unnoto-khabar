@@ -107,5 +107,26 @@ body {
   animation-play-state: paused;
 }
 
+/* Seamless Continuous All Offers Headline Marquee */
+@keyframes marquee-ticker-loop {
+  0% {
+    transform: translate3d(0%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee-ticker {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-ticker-loop 120s linear infinite;
+}
+
+.animate-marquee-ticker:hover {
+  animation-play-state: paused;
+}
+
 
 
