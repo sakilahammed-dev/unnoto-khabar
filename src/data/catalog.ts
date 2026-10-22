@@ -39,7 +39,7 @@ export const MASTER_CATEGORIES: Category[] = [
     icon: 'calendar',
     imageUrl: '/categories/dates.jpg',
     description: 'মদিনার আজওয়া, আম্বর, মরিয়ম, সুক্কারি ও মেদজুল খেজুর',
-    itemCount: 11,
+    itemCount: 10,
   },
   {
     id: 'oil-ghee',
@@ -1005,26 +1005,6 @@ export const PRODUCTS_CATALOG: Product[] = [
     sku: 'UK-DAT-005-500G',
     variants: [
       { id: 'nagal-500g-v1', weight: '৫০০ গ্রাম', price: 200, originalPrice: 200, inStock: true },
-    ],
-  },
-  {
-    id: 'mabroom-dates',
-    slug: 'saudi-mabroom-premium-dates',
-    name: 'Saudi Mabroom Dates',
-    banglaName: 'সৌদি মাবরুম প্রিমিয়াম খেজুর',
-    category: 'dates',
-    categoryName: 'আমদানি করা রাজকীয় খেজুর',
-    shortDescription: 'লম্বাটে গড়ন ও মৃদু মিষ্টি স্বাদের চমৎকার প্রিমিয়াম কোয়ালিটি মাবরুম।',
-    description: 'যাঁরা অতিরিক্ত মিষ্টি পছন্দ করেন না, তাঁদের জন্য মাবরুম খেজুর সবচেয়ে প্রিয় পছন্দ। চিউই ও পুষ্টিকর।',
-    features: ['কম মিষ্টি ও দীর্ঘমেয়াদে তাজা থাকে', 'আঁশ ও প্রাকৃতিক এনার্জি সমৃদ্ধ'],
-    imageUrl: '/categories/dates.jpg',
-    rating: 4.8,
-    reviewsCount: 88,
-    isOffer: false,
-    sku: 'UK-DAT-006',
-    variants: [
-      { id: 'mabroom-dates-v1', weight: '৫০০ গ্রাম', price: 620, originalPrice: 720, inStock: true },
-      { id: 'mabroom-dates-v2', weight: '১ কেজি', price: 1190, originalPrice: 1390, inStock: true },
     ],
   },
 
