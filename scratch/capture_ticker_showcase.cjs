@@ -5,7 +5,7 @@ const fs = require('fs');
 async function test() {
   const chrome = spawn('google-chrome', [
     '--headless=new',
-    '--remote-debugging-port=9294',
+    '--remote-debugging-port=9293',
     '--disable-gpu',
     '--no-sandbox',
     '--window-size=1600,1000',
@@ -15,7 +15,7 @@ async function test() {
 
   try {
     const targets = await new Promise((resolve, reject) => {
-      http.get('http://127.0.0.1:9294/json', (res) => {
+      http.get('http://127.0.0.1:9293/json', (res) => {
         let data = '';
         res.on('data', chunk => data += chunk);
         res.on('end', () => resolve(JSON.parse(data)));
@@ -49,16 +49,16 @@ async function test() {
 
     // Capture t1
     const shot1 = await send('Page.captureScreenshot', { format: 'png' });
-    fs.writeFileSync('/home/assdi/.gemini/antigravity/brain/b2f24863-ebf9-4482-a180-c7f6a4ce986f/ticker_new_t1.png', Buffer.from(shot1.data, 'base64'));
+    fs.writeFileSync('/home/assdi/.gemini/antigravity/brain/b2f24863-ebf9-4482-a180-c7f6a4ce986f/ticker_black_t1.png', Buffer.from(shot1.data, 'base64'));
 
-    // Wait 3 seconds to let marquee move
-    await new Promise(r => setTimeout(r, 3000));
+    // Wait 3.5 seconds to see movement
+    await new Promise(r => setTimeout(r, 3500));
 
     // Capture t2
     const shot2 = await send('Page.captureScreenshot', { format: 'png' });
-    fs.writeFileSync('/home/assdi/.gemini/antigravity/brain/b2f24863-ebf9-4482-a180-c7f6a4ce986f/ticker_new_t2.png', Buffer.from(shot2.data, 'base64'));
+    fs.writeFileSync('/home/assdi/.gemini/antigravity/brain/b2f24863-ebf9-4482-a180-c7f6a4ce986f/ticker_black_t2.png', Buffer.from(shot2.data, 'base64'));
 
-    console.log('Ticker screenshots saved!');
+    console.log('Black ticker screenshots saved!');
     ws.close();
   } finally {
     chrome.kill();

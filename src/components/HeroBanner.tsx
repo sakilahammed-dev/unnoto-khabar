@@ -199,67 +199,27 @@ export const HeroBanner: React.FC = () => {
         <HomeCategoryShowcase />
       </div>
 
-      {/* রানিং হেডলাইন স্ট্রিপ: সকল ডিসকাউন্ট ও বিশেষ অফার পণ্যের অবিরাম স্ক্রলিং */}
+      {/* রানিং হেডলাইন স্ট্রিপ: ১ থেকে ২৫টি বিশেষ অফার পণ্যের ফুল ব্ল্যাক একক স্ক্রলিং */}
       <div className="w-full shrink-0 border-y border-amber-200/80 bg-gradient-to-r from-amber-50 via-orange-50/50 to-amber-50 py-1.5 sm:py-2 overflow-hidden flex items-center relative shadow-2xs select-none">
         {/* দুই পাশে হালকা ফেড ওভারলে */}
         <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 sm:w-14 bg-gradient-to-r from-amber-50 to-transparent z-10" />
         <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-14 bg-gradient-to-l from-amber-50 to-transparent z-10" />
 
         <div className="overflow-hidden w-full relative">
-          <div className="animate-marquee-ticker whitespace-nowrap flex items-center">
-            {/* Set 1 */}
+          <div className="animate-marquee-single whitespace-nowrap flex items-center">
             <div className="flex items-center shrink-0">
               {offerProducts.map((p) => {
                 const variant = p.variants[0];
                 return (
                   <span
-                    key={`ticker-1-${p.id}`}
+                    key={`ticker-${p.id}`}
                     onClick={() => {
                       const el = document.getElementById(`product-${p.id}`) || document.getElementById('catalog-products-section');
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="inline-flex items-center shrink-0 mx-3 sm:mx-5 cursor-pointer hover:opacity-85 transition"
+                    className="inline-flex items-center shrink-0 mx-3 sm:mx-5 cursor-pointer text-black hover:opacity-75 transition font-extrabold text-xs sm:text-[14px] md:text-[15.5px] tracking-wide"
                   >
-                    <span className="text-amber-500 font-black mr-2 sm:mr-3 select-none text-sm sm:text-base">✦</span>
-                    <span className="text-gray-900 tracking-wide text-xs sm:text-[14px] md:text-[15px] font-bold">
-                      {p.banglaName}{' '}
-                      <span className="text-red-600 font-extrabold">
-                        {toBanglaDigits(p.discountPercentage || 0)}% ডিসকাউন্টে
-                      </span>{' '}
-                      এখন পাচ্ছেন মাত্র{' '}
-                      <span className="text-[#f48721] font-extrabold">
-                        {toBanglaDigits(variant.price)} টাকায়।
-                      </span>
-                    </span>
-                  </span>
-                );
-              })}
-            </div>
-
-            {/* Set 2 (১০০% নিরবচ্ছিন্ন ইনফিনিট লুপের জন্য হুবহু দ্বিতীয় সেট) */}
-            <div className="flex items-center shrink-0" aria-hidden="true">
-              {offerProducts.map((p) => {
-                const variant = p.variants[0];
-                return (
-                  <span
-                    key={`ticker-2-${p.id}`}
-                    onClick={() => {
-                      const el = document.getElementById(`product-${p.id}`) || document.getElementById('catalog-products-section');
-                      if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="inline-flex items-center shrink-0 mx-3 sm:mx-5 cursor-pointer hover:opacity-85 transition"
-                  >
-                    <span className="text-amber-500 font-black mr-2 sm:mr-3 select-none text-sm sm:text-base">✦</span>
-                    <span className="text-gray-900 tracking-wide text-xs sm:text-[14px] md:text-[15px] font-bold">
-                      {p.banglaName}{' '}
-                      <span className="text-red-600 font-extrabold">
-                        {toBanglaDigits(p.discountPercentage || 0)}% ডিসকাউন্টে
-                      </span>{' '}
-                      এখন পাচ্ছেন মাত্র{' '}
-                      <span className="text-[#f48721] font-extrabold">
-                        {toBanglaDigits(variant.price)} টাকায়।
-                      </span>
-                    </span>
+                    * {p.banglaName} {toBanglaDigits(p.discountPercentage || 0)}% ডিসকাউন্টে এখন পাচ্ছেন মাত্র {toBanglaDigits(variant.price)} টাকায়।
                   </span>
                 );
               })}

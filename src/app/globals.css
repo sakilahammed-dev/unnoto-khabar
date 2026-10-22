@@ -79,7 +79,7 @@ body {
   display: inline-flex;
   width: max-content;
   will-change: transform;
-  animation: marquee-single-line 20s linear infinite;
+  animation: marquee-single-line 135s linear infinite;
 }
 
 .animate-marquee-single:hover {
