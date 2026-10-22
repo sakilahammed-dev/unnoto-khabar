@@ -49,7 +49,7 @@ export const MASTER_CATEGORIES: Category[] = [
     icon: 'flask-conical',
     imageUrl: '/categories/oil_ghee.jpg',
     description: 'কাঠের ঘানিভাঙা সরিষার তেল ও বাঘাবাড়ির খাঁটি গাওয়া ঘি',
-    itemCount: 11,
+    itemCount: 10,
   },
   {
     id: 'shutki-balachaw',
@@ -1245,26 +1245,6 @@ export const PRODUCTS_CATALOG: Product[] = [
     sku: 'UK-OIL-002-500G',
     variants: [
       { id: 'olive-oil-500g-v1', weight: '৫০০ গ্রাম', price: 800, originalPrice: 800, inStock: true },
-    ],
-  },
-  {
-    id: 'cold-pressed-coconut-oil',
-    slug: 'cold-pressed-virgin-coconut-oil',
-    name: 'Extra Virgin Coconut Oil',
-    banglaName: 'কোল্ড প্রেসড এক্সট্রা ভার্জিন নারকেল তেল',
-    category: 'oil-ghee',
-    categoryName: 'ঘানিভাঙা তেল ও খাঁটি ঘি',
-    shortDescription: 'তাজা নারকেলের দুধ থেকে তৈরি ১০০% খাওয়ার উপযোগী খাঁটি সুগন্ধি নারকেল তেল।',
-    description: 'মাথায় ব্যবহারের পাশাপাশি কিটো ডায়েট এবং রান্নায় ব্যবহারের জন্য সেরা প্রাকৃতিক নারকেল তেল।',
-    features: ['খাওয়ার উপযোগী এডিবল গ্রেড', 'লরিক এসিড সমৃদ্ধ', 'প্রাকৃতিক নারকেলের মিষ্টি গন্ধ'],
-    imageUrl: '/categories/oil_ghee.jpg',
-    rating: 4.8,
-    reviewsCount: 65,
-    isOffer: false,
-    sku: 'UK-OIL-003',
-    variants: [
-      { id: 'cold-pressed-coconut-oil-v1', weight: '২৫০ মিলি', price: 340, originalPrice: 390, inStock: true },
-      { id: 'cold-pressed-coconut-oil-v2', weight: '৫০০ মিলি', price: 620, originalPrice: 720, inStock: true },
     ],
   },
 
