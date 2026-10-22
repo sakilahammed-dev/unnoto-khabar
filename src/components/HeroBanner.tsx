@@ -15,12 +15,6 @@ const BANNERS = [
     alt: 'উন্নত খাবার - সুস্থ জীবনের সমাহার',
     target: 'offer-zone-section',
   },
-  {
-    id: 2,
-    src: '/hero_banner_sundarban_honey_v2.jpg',
-    alt: 'সুন্দরবনের ১০০% খাঁটি প্রাকৃতিক চাকের মধু - উন্নত খাবার',
-    target: 'offer-zone-section',
-  },
 ];
 
 export const HeroBanner: React.FC = () => {
@@ -29,16 +23,18 @@ export const HeroBanner: React.FC = () => {
   const touchStartX = useRef<number | null>(null);
 
   const nextSlide = useCallback(() => {
+    if (BANNERS.length <= 1) return;
     setCurrent((prev) => (prev + 1) % BANNERS.length);
   }, []);
 
   const prevSlide = useCallback(() => {
+    if (BANNERS.length <= 1) return;
     setCurrent((prev) => (prev - 1 + BANNERS.length) % BANNERS.length);
   }, []);
 
-  // ৫-৭ সেকেন্ড (৬ সেকেন্ড) পর পর স্বয়ংক্রিয় পরিবর্তন
+  // ৫-৭ সেকেন্ড (৬ সেকেন্ড) পর পর স্বয়ংক্রিয় পরিবর্তন (একাধিক ব্যানার থাকলে)
   useEffect(() => {
-    if (isHovered) return;
+    if (isHovered || BANNERS.length <= 1) return;
     const timer = setInterval(() => {
       nextSlide();
     }, 6000);
@@ -118,50 +114,54 @@ export const HeroBanner: React.FC = () => {
                 ))}
               </div>
 
-              {/* নেভিগেশন তীর (Left & Right Navigation Chevrons) */}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  prevSlide();
-                }}
-                aria-label="পূর্ববর্তী ব্যানার"
-                className="absolute left-2.5 sm:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black/35 hover:bg-black/60 text-white backdrop-blur-md flex items-center justify-center border border-white/30 shadow-md opacity-75 sm:opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 z-10"
-              >
-                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
-
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  nextSlide();
-                }}
-                aria-label="পরবর্তী ব্যানার"
-                className="absolute right-2.5 sm:right-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black/35 hover:bg-black/60 text-white backdrop-blur-md flex items-center justify-center border border-white/30 shadow-md opacity-75 sm:opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 z-10"
-              >
-                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
-
-              {/* ইন্ডিকেটর ডট / ক্যাপসুল (Pagination Indicators) */}
-              <div
-                className="absolute bottom-2.5 sm:bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 sm:gap-2 z-10 bg-black/25 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {BANNERS.map((banner, index) => (
+              {/* নেভিগেশন তীর ও ইন্ডিকেটর (শুধুমাত্র একাধিক ব্যানার থাকলে দৃশ্যমান হবে) */}
+              {BANNERS.length > 1 && (
+                <>
                   <button
-                    key={banner.id}
                     type="button"
-                    onClick={() => setCurrent(index)}
-                    aria-label={`ব্যানার ${index + 1}`}
-                    className={`transition-all duration-300 rounded-full ${
-                      index === current
-                        ? 'w-6 sm:w-7 h-2 sm:h-2.5 bg-gradient-to-r from-amber-400 to-orange-500 shadow-sm'
-                        : 'w-2 sm:w-2.5 h-2 sm:h-2.5 bg-white/70 hover:bg-white'
-                    }`}
-                  />
-                ))}
-              </div>
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      prevSlide();
+                    }}
+                    aria-label="পূর্ববর্তী ব্যানার"
+                    className="absolute left-2.5 sm:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black/35 hover:bg-black/60 text-white backdrop-blur-md flex items-center justify-center border border-white/30 shadow-md opacity-75 sm:opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 z-10"
+                  >
+                    <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      nextSlide();
+                    }}
+                    aria-label="পরবর্তী ব্যানার"
+                    className="absolute right-2.5 sm:right-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black/35 hover:bg-black/60 text-white backdrop-blur-md flex items-center justify-center border border-white/30 shadow-md opacity-75 sm:opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 z-10"
+                  >
+                    <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </button>
+
+                  {/* ইন্ডিকেটর ডট / ক্যাপসুল (Pagination Indicators) */}
+                  <div
+                    className="absolute bottom-2.5 sm:bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 sm:gap-2 z-10 bg-black/25 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {BANNERS.map((banner, index) => (
+                      <button
+                        key={banner.id}
+                        type="button"
+                        onClick={() => setCurrent(index)}
+                        aria-label={`ব্যানার ${index + 1}`}
+                        className={`transition-all duration-300 rounded-full ${
+                          index === current
+                            ? 'w-6 sm:w-7 h-2 sm:h-2.5 bg-gradient-to-r from-amber-400 to-orange-500 shadow-sm'
+                            : 'w-2 sm:w-2.5 h-2 sm:h-2.5 bg-white/70 hover:bg-white'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
