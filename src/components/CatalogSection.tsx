@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Home, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { MASTER_CATEGORIES, getProductsByCategory, getOfferProducts } from '@/data/catalog';
 import { ProductCard } from '@/components/ProductCard';
@@ -15,45 +14,16 @@ export const CatalogSection: React.FC = () => {
   // ১. বিশেষ অফার ভিউ (শুধুই যখন বিশেষ অফারে ক্লিক করা হবে)
   if (isSpecialOffers) {
     return (
-      <section id="catalog-products-section" className="py-8 sm:py-12 bg-white/70 backdrop-blur-xs min-h-[60vh]">
+      <section id="catalog-products-section" className="py-6 sm:py-10 bg-white/70 backdrop-blur-xs min-h-[60vh]">
         <div className="w-full max-w-[1520px] 2xl:max-w-[1560px] mx-auto px-1.5 sm:px-4 lg:px-6 xl:px-8">
-          <nav className="flex items-center gap-1.5 text-xs sm:text-sm text-gray-500 mb-4">
-            <button
-              type="button"
-              onClick={() => setSelectedCategory(null)}
-              className="hover:text-[#f48721] flex items-center gap-1 transition cursor-pointer"
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>হোম</span>
-            </button>
-            <span>/</span>
-            <span className="text-red-600 font-bold">বিশেষ অফার</span>
-          </nav>
-
-          <div className="bg-gradient-to-r from-red-50 via-white to-amber-50 border border-red-200/80 rounded-2xl p-4 sm:p-6 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
-            <div>
-              <div className="flex items-center gap-3">
-                <span className="w-3 h-8 sm:h-9 rounded-full bg-red-600 shadow-xs shrink-0" />
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#222831]">
-                  বিশেষ অফার ও ডিসকাউন্ট
-                </h1>
-                <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-xs">
-                  {offerProducts.length} টি বিশেষ অফার
-                </span>
-              </div>
-              <p className="text-xs sm:text-sm text-gray-600 mt-2 font-medium">
-                সীমিত সময়ের জন্য বাছাইকৃত প্রিমিয়াম খাদ্যে আকর্ষণীয় ছাড়!
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setSelectedCategory(null)}
-              className="self-start sm:self-auto inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-gray-700 bg-white hover:bg-orange-50 border border-orange-300 hover:border-[#f48721] px-4 py-2.5 rounded-xl transition shadow-xs cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4 text-[#f48721]" />
-              <span>সকল পণ্যে ফিরে যান</span>
-            </button>
+          {/* বিশেষ অফার হেডার: সাধারণ, পরিচ্ছন্ন ও নিচে আন্ডারলাইন */}
+          <div className="mb-6 sm:mb-8 border-b border-gray-200 pb-2.5 sm:pb-3">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#222831]">
+              বিশেষ অফার
+            </h1>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1 font-medium">
+              সীমিত সময়ের জন্য বাছাইকৃত খাদ্যে আকর্ষণীয় ছাড়!
+            </p>
           </div>
 
           {offerProducts.length > 0 ? (
