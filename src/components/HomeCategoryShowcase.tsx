@@ -189,23 +189,14 @@ export const HomeCategoryShowcase: React.FC = () => {
                     title={`${item.name} দেখুন`}
                     className="group flex flex-col items-center justify-start w-full text-center transition-all duration-300 focus:outline-hidden cursor-pointer select-none"
                   >
-                    {/* ৪ কোণা (Squircle) ব্যাজ র‍্যাপার উইথ গোল্ডেন লাইটিং রিং */}
+                    {/* ৪ কোণা (Squircle) ব্যাজ র‍্যাপার - ব্যাকগ্রাউন্ডের সাথে মেলানো ক্লিন লুক */}
                     <div className="relative flex items-center justify-center">
-                      {/* লাইটিং অরা / পালসিং হ্যালো */}
+                      {/* ব্যাজ ইমেজ কন্টেইনার (৪ কোণা স্কোয়ার্কল কার্ড - ব্যাকগ্রাউন্ডের সাথে ব্লেন্ডেড) */}
                       <div
-                        className={`absolute -inset-1.5 rounded-2xl transition-all duration-300 opacity-60 group-hover:opacity-100 group-hover:scale-105 blur-[4px] ${
+                        className={`relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-[70px] lg:h-[70px] xl:w-[78px] xl:h-[78px] 2xl:w-[82px] 2xl:h-[82px] rounded-2xl bg-white p-1 sm:p-1.5 flex items-center justify-center border transition-all duration-300 group-hover:-translate-y-1 group-hover:scale-105 active:scale-95 ${
                           isOffer
-                            ? 'bg-gradient-to-tr from-red-500 via-amber-400 to-orange-500 animate-pulse'
-                            : 'bg-gradient-to-tr from-amber-300 via-amber-400 to-yellow-200 group-hover:blur-[6px]'
-                        }`}
-                      />
-
-                      {/* ব্যাজ ইমেজ কন্টেইনার (৪ কোণা স্কোয়ার্কল কার্ড - স্কেল অনুযায়ী বড় ও স্পষ্ট) */}
-                      <div
-                        className={`relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-[70px] lg:h-[70px] xl:w-[78px] xl:h-[78px] 2xl:w-[82px] 2xl:h-[82px] rounded-2xl bg-white p-1 sm:p-1.5 flex items-center justify-center shadow-md transition-all duration-300 group-hover:-translate-y-1 group-hover:scale-105 active:scale-95 ${
-                          isOffer
-                            ? 'ring-2 ring-red-500/80 shadow-[0_0_12px_rgba(239,68,68,0.35)]'
-                            : 'ring-1.5 ring-amber-400/80 group-hover:ring-2 group-hover:ring-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.22)]'
+                            ? 'border-red-400/80 shadow-xs group-hover:shadow-md group-hover:border-red-500'
+                            : 'border-amber-200/50 shadow-xs group-hover:shadow-md group-hover:border-amber-400/70'
                         }`}
                       >
                         <Image
