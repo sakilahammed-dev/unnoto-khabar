@@ -17,7 +17,7 @@ export const SHOWCASE_CATEGORIES: ShowcaseBadge[] = [
   { id: 'honey', name: 'মধু', image: '/categories/emblems/honey.png' },
   { id: 'honey-nuts', name: 'হানি নাটস', image: '/categories/emblems/honey-nuts.png' },
   { id: 'whole-nuts', name: 'বাদাম', image: '/categories/emblems/whole-nuts.png' },
-  { id: 'dates', name: 'খেজুর', image: '/categories/emblems/dates.png' },
+  { id: 'dates', name: 'খেজুর', image: '/categories/emblems/dates_v2.png' },
   { id: 'oil-ghee', name: 'তেল ও ঘি', image: '/categories/emblems/oil-ghee.png' },
   { id: 'shutki-balachaw', name: 'শুঁটকি', image: '/categories/emblems/shutki-balachaw.png' },
   { id: 'health-mix', name: 'স্বাস্থ্য মিক্স', image: '/categories/emblems/health-mix.png' },
