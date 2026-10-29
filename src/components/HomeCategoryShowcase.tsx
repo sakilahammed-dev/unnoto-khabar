@@ -189,23 +189,23 @@ export const HomeCategoryShowcase: React.FC = () => {
                     title={`${item.name} দেখুন`}
                     className="group flex flex-col items-center justify-start w-full text-center transition-all duration-300 focus:outline-hidden cursor-pointer select-none"
                   >
-                    {/* সার্কুলার ব্যাজ র‍্যাপার উইথ গোল্ডেন লাইটিং রিং */}
+                    {/* ৪ কোণা (Squircle) ব্যাজ র‍্যাপার উইথ গোল্ডেন লাইটিং রিং */}
                     <div className="relative flex items-center justify-center">
                       {/* লাইটিং অরা / পালসিং হ্যালো */}
                       <div
-                        className={`absolute -inset-1.5 rounded-full transition-all duration-300 opacity-60 group-hover:opacity-100 group-hover:scale-110 blur-[4px] ${
+                        className={`absolute -inset-1.5 rounded-2xl transition-all duration-300 opacity-60 group-hover:opacity-100 group-hover:scale-105 blur-[4px] ${
                           isOffer
                             ? 'bg-gradient-to-tr from-red-500 via-amber-400 to-orange-500 animate-pulse'
                             : 'bg-gradient-to-tr from-amber-300 via-amber-400 to-yellow-200 group-hover:blur-[6px]'
                         }`}
                       />
 
-                      {/* ব্যাজ ইমেজ কন্টেইনার (স্কেল অনুযায়ী বড় ও স্পষ্ট) */}
+                      {/* ব্যাজ ইমেজ কন্টেইনার (৪ কোণা স্কোয়ার্কল কার্ড - স্কেল অনুযায়ী বড় ও স্পষ্ট) */}
                       <div
-                        className={`relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-[70px] lg:h-[70px] xl:w-[78px] xl:h-[78px] 2xl:w-[82px] 2xl:h-[82px] rounded-full bg-white p-0.5 sm:p-1 flex items-center justify-center shadow-md transition-all duration-300 group-hover:-translate-y-1 group-hover:scale-105 active:scale-95 ${
+                        className={`relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-[70px] lg:h-[70px] xl:w-[78px] xl:h-[78px] 2xl:w-[82px] 2xl:h-[82px] rounded-2xl bg-white p-1 sm:p-1.5 flex items-center justify-center shadow-md transition-all duration-300 group-hover:-translate-y-1 group-hover:scale-105 active:scale-95 ${
                           isOffer
                             ? 'ring-2 ring-red-500/80 shadow-[0_0_12px_rgba(239,68,68,0.35)]'
-                            : 'ring-1.5 ring-amber-400/80 group-hover:ring-2 group-hover:ring-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.25)]'
+                            : 'ring-1.5 ring-amber-400/80 group-hover:ring-2 group-hover:ring-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.22)]'
                         }`}
                       >
                         <Image
@@ -214,7 +214,7 @@ export const HomeCategoryShowcase: React.FC = () => {
                           width={140}
                           height={140}
                           priority
-                          className="w-full h-full object-contain rounded-full transition-transform duration-300 group-hover:rotate-2"
+                          className="w-full h-full object-contain rounded-xl transition-transform duration-300 group-hover:scale-105"
                         />
 
                         {/* অফার ব্যাজ ট্যাগ */}
