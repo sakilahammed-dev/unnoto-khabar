@@ -69,7 +69,7 @@ export const MASTER_CATEGORIES: Category[] = [
     icon: 'activity',
     imageUrl: '/categories/health_mix.jpg',
     description: 'ন্যাচারাল ওয়েট গেইন, ডায়াবেটিক কেয়ার ও গোল্ডেন মিল্ক ইমিউনিটি বুস্টার',
-    itemCount: 7,
+    itemCount: 8,
   },
   {
     id: 'super-seeds',
@@ -1599,6 +1599,25 @@ export const PRODUCTS_CATALOG: Product[] = [
     sku: 'UK-HLT-002-500G',
     variants: [
       { id: 'diabetic-mix-500g-v1', weight: '৫০০ গ্রাম', price: 650, originalPrice: 650, inStock: true },
+    ],
+  },
+  {
+    id: 'diabetic-care-nutrition-mix-250g',
+    slug: 'diabetic-care-nutrition-mix-250g',
+    name: "Diabetic Care Nutrition Mix (250g)",
+    banglaName: 'ডায়াবেটিক কেয়ার নিউট্রিশন মিক্স ২৫০ গ্রাম',
+    category: 'health-mix',
+    categoryName: 'স্বাস্থ্য ও ওজন বৃদ্ধি মিক্স',
+    shortDescription: 'মেথি, কালোজিরা, জামের বীজ ও তিসির তৈরি নো অ্যাডেড সুগার ডায়াবেটিক কেয়ার মিক্স (২৫০ গ্রাম ট্রায়াল প্যাক)।',
+    description: 'ডায়াবেটিস রোগীদের প্রাকৃতিক উপায়ে রক্তের গ্লুকোজ লেভেল নিয়ন্ত্রণে রাখা, শারীরিক ক্লান্তি দূর করা এবং রোগ প্রতিরোধ ক্ষমতা বাড়াতে বিশেষভাবে প্রস্তুতকৃত ডায়াবেটিক কেয়ার নিউট্রিশন মিক্স। সম্পূর্ণ নো অ্যাডেড সুগার, উচ্চ ফাইবার এবং বিশুদ্ধ প্রাকৃতিক উপাদানে তৈরি।',
+    features: ['১০০% নো অ্যাডেড সুগার ও সম্পূর্ণ প্রাকৃতিক', 'মেথি, কালোজিরা, জামের বীজ ও তিসির সুপার ব্লেন্ড', 'রক্তের গ্লুকোজ ব্যালেন্স ও শক্তির উৎস', 'উন্নত ফুড গ্রেড জিপলক ও এয়ারটাইট প্রটেকশন'],
+    imageUrl: '/products/diabetic_care_nutrition_mix.png',
+    rating: 4.9,
+    reviewsCount: 85,
+    isOffer: false,
+    sku: 'UK-HLT-002-250G',
+    variants: [
+      { id: 'diabetic-mix-250g-v1', weight: '২৫০ গ্রাম', price: 350, originalPrice: 350, inStock: true },
     ],
   },
   {
