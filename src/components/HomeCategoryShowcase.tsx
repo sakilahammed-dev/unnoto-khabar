@@ -14,7 +14,7 @@ export interface ShowcaseBadge {
 }
 
 export const SHOWCASE_CATEGORIES: ShowcaseBadge[] = [
-  { id: 'honey', name: 'মধু', image: '/categories/emblems/honey.png' },
+  { id: 'honey', name: 'মধু', image: '/categories/emblems/honey_v2.png' },
   { id: 'honey-nuts', name: 'হানি নাটস', image: '/categories/emblems/honey-nuts.png' },
   { id: 'whole-nuts', name: 'বাদাম', image: '/categories/emblems/whole-nuts.png' },
   { id: 'dates', name: 'খেজুর', image: '/categories/emblems/dates_v2.png' },
