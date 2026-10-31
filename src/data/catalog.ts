@@ -88,8 +88,8 @@ export const MASTER_CATEGORIES: Category[] = [
     banglaName: 'আচার ও মসলা',
     icon: 'flame',
     imageUrl: '/categories/pickles_spices.jpg',
-    description: 'খুলনার ঐতিহ্যবাহী চুইঝাল, বোম্বাই মরিচের আচার ও খাঁটি হলুদ-মরিচ গুঁড়া',
-    itemCount: 3,
+    description: 'খুলনার চুইঝাল, স্পেশাল তেঁতুলের আচার, বোম্বাই মরিচের আচার ও খাঁটি মসলা',
+    itemCount: 5,
   },
 ];
 
@@ -1833,6 +1833,44 @@ export const PRODUCTS_CATALOG: Product[] = [
   },
 
   // 9. আচার, চুইঝাল ও স্পেশাল মসলা (Pickles & Spices)
+  {
+    id: 'sweet-sour-tamarind-pickle-800g',
+    slug: 'sweet-sour-tamarind-pickle-800g',
+    name: 'Sweet & Sour Tamarind Pickle (800g)',
+    banglaName: 'স্পেশাল টক-ঝাল-মিষ্টি তেঁতুলের আচার ৮০০ গ্রাম',
+    category: 'pickles-spices',
+    categoryName: 'আচার, চুইঝাল ও স্পেশাল মসলা',
+    shortDescription: 'পাকা দেশি তেঁতুল, খাঁটি সরিষার তেল ও পাঁচফোড়নের স্বাদে তৈরি জিভে জল আনা আচার (৮০০ গ্রাম ফ্যামিলি প্যাক)।',
+    description: 'গাছপাকা বাছাইকৃত খাঁটি দেশি তেঁতুল, ঘানিভাঙা সরিষার তেল, ভাজা পাঁচফোড়ন, বিট লবণ ও বিশেষ মশলার মিশ্রণে সম্পূর্ণ স্বাস্থ্যসম্মত উপায়ে প্রস্তুতকৃত স্পেশাল টক-ঝাল-মিষ্টি তেঁতুলের আচার। খিচুড়ি, পোলাও, বিরিয়ানি বা ডাল-ভাতের সাথে খাওয়ার জন্য অতুলনীয়। কোনো প্রকার কৃত্রিম প্রিজারভেটিভ বা কেমিক্যাল ছাড়া রোদে শুকিয়ে তৈরি।',
+    features: ['গাছপাকা খাঁটি দেশি তেঁতুলের তৈরি', 'ঘানিভাঙা সরিষার তেল ও খাঁটি মশলার সুবাস', '১০০% ঘরোয়া উপায়ে তৈরি ও প্রিজারভেটিভমুক্ত', 'টক, ঝাল ও মিষ্টির মনকাড়া পারফেক্ট স্বাদ'],
+    imageUrl: '/products/sweet_sour_tamarind_pickle.png',
+    rating: 5.0,
+    reviewsCount: 185,
+    isOffer: false,
+    sku: 'UK-PCK-002-800G',
+    variants: [
+      { id: 'tamarind-pickle-800g-v1', weight: '৮০০ গ্রাম', price: 600, originalPrice: 600, inStock: true },
+    ],
+  },
+  {
+    id: 'sweet-sour-tamarind-pickle-400g',
+    slug: 'sweet-sour-tamarind-pickle-400g',
+    name: 'Sweet & Sour Tamarind Pickle (400g)',
+    banglaName: 'স্পেশাল টক-ঝাল-মিষ্টি তেঁতুলের আচার ৪০০ গ্রাম',
+    category: 'pickles-spices',
+    categoryName: 'আচার, চুইঝাল ও স্পেশাল মসলা',
+    shortDescription: 'পাকা দেশি তেঁতুল, খাঁটি সরিষার তেল ও পাঁচফোড়নের স্বাদে তৈরি জিভে জল আনা আচার (৪০০ গ্রাম স্ট্যান্ডার্ড প্যাক)।',
+    description: 'গাছপাকা বাছাইকৃত খাঁটি দেশি তেঁতুল, ঘানিভাঙা সরিষার তেল, ভাজা পাঁচফোড়ন, বিট লবণ ও বিশেষ মশলার মিশ্রণে সম্পূর্ণ স্বাস্থ্যসম্মত উপায়ে প্রস্তুতকৃত স্পেশাল টক-ঝাল-মিষ্টি তেঁতুলের আচার। খিচুড়ি, পোলাও, বিরিয়ানি বা ডাল-ভাতের সাথে খাওয়ার জন্য অতুলনীয়। কোনো প্রকার কৃত্রিম প্রিজারভেটিভ বা কেমিক্যাল ছাড়া রোদে শুকিয়ে তৈরি।',
+    features: ['গাছপাকা খাঁটি দেশি তেঁতুলের তৈরি', 'ঘানিভাঙা সরিষার তেল ও খাঁটি মশলার সুবাস', '১০০% ঘরোয়া উপায়ে তৈরি ও প্রিজারভেটিভমুক্ত', 'টক, ঝাল ও মিষ্টির মনকাড়া পারফেক্ট স্বাদ'],
+    imageUrl: '/products/sweet_sour_tamarind_pickle.png',
+    rating: 4.9,
+    reviewsCount: 124,
+    isOffer: false,
+    sku: 'UK-PCK-002-400G',
+    variants: [
+      { id: 'tamarind-pickle-400g-v1', weight: '৪০০ গ্রাম', price: 350, originalPrice: 350, inStock: true },
+    ],
+  },
   {
     id: 'khulna-chuijhal',
     slug: 'authentic-khulna-chuijhal-stem',
