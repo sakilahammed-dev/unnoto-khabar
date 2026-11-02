@@ -4,9 +4,9 @@ import { CartProvider } from '@/context/CartContext';
 import { StoreLayoutWrapper } from '@/components/StoreLayoutWrapper';
 
 export const metadata: Metadata = {
-  title: 'উন্নত খাবার | সুস্থ জীবনের খাঁটি আহার - ১০০% খাঁটি অর্গানিক খাদ্য',
+  title: 'উন্নত খাবার (Unnoto Khabar)',
   description:
-    'সুন্দরবনের প্রাকৃতিক চাকের কাঁচা মধু, কাঠের ঘানিভাঙা সরিষার তেল, প্রিমিয়াম হানি নাটস, মদিনার আজওয়া খেজুর, খাঁটি গাওয়া ঘি ও দেশি শুঁটকি। সারা দেশে ক্যাশ অন ডেলিভারি।',
+    'সুন্দরবনের খাঁটি চাকের মধু, কাঠের ঘানিভাঙা সরিষার তেল, প্রিমিয়াম হানি নাটস, মদিনার আজওয়া খেজুর, খাঁটি গাওয়া ঘি ও দেশি শুঁটকি। সারা দেশে ক্যাশ অন ডেলিভারি।',
   keywords: [
     'উন্নত খাবার',
     'Unnoto Khabar',
