@@ -1,0 +1,122 @@
+// Prisma Schema for Unnoto Khabar (উন্নত খাবার)
+// Production-grade e-commerce relational schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 1. Orders table - Customer orders with full payment, delivery, and tracking info
+model Order {
+  id              String      @id @default(cuid())
+  orderCode       String      @unique // Human-readable e.g. UK-2611-1001
+  customerName    String
+  phoneNumber     String      // Indexed for fast lookup and tracking
+  district        String
+  upazila         String
+  address         String
+  notes           String?
+  
+  // Delivery details
+  deliveryZone    String      // "inside-dhaka" or "outside-dhaka"
+  deliveryCharge  Int         // 70 or 130
+  
+  // Financial calculations
+  subtotal        Int
+  totalAmount     Int
+  advancePlan     Int         @default(0) // 0, 20, 50, 100
+  advanceAmount   Int         @default(0)
+  dueAmount       Int         @default(0)
+  
+  // Payment info
+  paymentMethod       String      // "cod", "bkash", "nagad"
+  paymentTrxId        String?
+  paymentSenderNumber String?
+  paymentStatus       String      @default("UNPAID") // "UNPAID", "PARTIALLY_PAID", "PAID"
+  
+  // Order Lifecycle Status
+  // PENDING -> CONFIRMED -> PROCESSING -> SHIPPED -> DELIVERED -> CANCELLED / RETURNED
+  status          String      @default("PENDING")
+  
+  // Logistics & Admin management
+  courierName     String?     // e.g. "Steadfast", "Pathao", "RedX"
+  trackingCode    String?     // Consignment ID
+  internalNotes   String?     // Notes for admin staff
+  
+  // Timestamps
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  // Relationships
+  items           OrderItem[]
+
+  @@index([phoneNumber])
+  @@index([orderCode])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// 2. OrderItem table - Individual products in an order
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  productId   String
+  name        String
+  weight      String
+  unitPrice   Int
+  quantity    Int
+  totalPrice  Int
+  imageUrl    String?
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+// 3. AdminUser table - Secure administrator authentication
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("SUPER_ADMIN") // "SUPER_ADMIN", "STAFF"
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// 4. ProductOverride - Dynamic price, discount & stock controls from admin panel
+model ProductOverride {
+  id            String   @id @default(cuid())
+  productId     String   @unique
+  customPrice   Int?
+  originalPrice Int?
+  inStock       Boolean  @default(true)
+  isOffer       Boolean?
+  badge         String?
+  updatedAt     DateTime @updatedAt
+}
+
+// 5. CustomProduct - New products added directly from admin panel
+model CustomProduct {
+  id               String   @id @default(cuid())
+  name             String
+  banglaName       String
+  category         String
+  categoryName     String
+  shortDescription String?
+  imageUrl         String
+  weight           String
+  price            Int
+  originalPrice    Int
+  inStock          Boolean  @default(true)
+  isOffer          Boolean  @default(false)
+  badge            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}

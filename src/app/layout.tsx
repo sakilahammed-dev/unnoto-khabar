@@ -1,15 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
-import { MobileBottomNav } from '@/components/MobileBottomNav';
-import { CartDrawer } from '@/components/CartDrawer';
-import { QuickOrderModal } from '@/components/QuickOrderModal';
-import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
-import { CartToast } from '@/components/CartToast';
-import { FloatingCartTab } from '@/components/FloatingCartTab';
-import { MobileMenuDrawer } from '@/components/MobileMenuDrawer';
+import { StoreLayoutWrapper } from '@/components/StoreLayoutWrapper';
 
 export const metadata: Metadata = {
   title: 'উন্নত খাবার | সুস্থ জীবনের খাঁটি আহার - ১০০% খাঁটি অর্গানিক খাদ্য',
@@ -56,23 +48,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col bg-[#fff5f7] text-[#252a34] antialiased selection:bg-pink-100 selection:text-pink-900">
         <CartProvider>
-          {/* Sticky Header */}
-          <Header />
-
-          {/* Main Body Content */}
-          <main className="flex-1 pb-16 md:pb-0">{children}</main>
-
-          {/* Trust Badges, Reviews & Footer */}
-          <Footer />
-
-          {/* Persistent Floating Controls & Modals */}
-          <MobileMenuDrawer />
-          <MobileBottomNav />
-          <CartDrawer />
-          <QuickOrderModal />
-          <FloatingWhatsApp />
-          <CartToast />
-          <FloatingCartTab />
+          <StoreLayoutWrapper>{children}</StoreLayoutWrapper>
         </CartProvider>
       </body>
     </html>

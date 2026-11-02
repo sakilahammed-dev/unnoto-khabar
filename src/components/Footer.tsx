@@ -83,6 +83,11 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-1.5 text-xs text-gray-600">
               <li>
+                <Link href="/track" className="text-[#1b5e20] font-bold hover:text-[#f48721] transition flex items-center gap-1">
+                  📦 অর্ডার ট্র্যাক করুন
+                </Link>
+              </li>
+              <li>
                 <Link href="#trust-section" className="hover:text-[#f48721] hover:font-semibold transition">
                   আমাদের বৈশিষ্ট্য
                 </Link>
@@ -98,19 +103,9 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <span className="hover:text-[#f48721] transition cursor-pointer">
-                  ডেলিভারি পলিসি
-                </span>
-              </li>
-              <li>
-                <span className="hover:text-[#f48721] transition cursor-pointer">
-                  রিটার্ন ও রিফান্ড নীতি
-                </span>
-              </li>
-              <li>
-                <span className="hover:text-[#f48721] transition cursor-pointer">
-                  গোপনীয়তা নীতি
-                </span>
+                <Link href="/admin" className="text-gray-400 hover:text-gray-600 transition text-[11px]">
+                  অ্যাডমিন লগইন
+                </Link>
               </li>
             </ul>
           </div>

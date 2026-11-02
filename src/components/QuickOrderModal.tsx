@@ -46,6 +46,10 @@ export const QuickOrderModal: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'bkash' | 'nagad'>('cod');
   // Choose Payment Plan when Bkash or Nagad is selected: '50' | '75' | '100'
   const [advancePlan, setAdvancePlan] = useState<'50' | '75' | '100'>('50');
+  // Real Payment Details for bKash / Nagad
+  const [senderNumber, setSenderNumber] = useState('');
+  const [trxId, setTrxId] = useState('');
+  const [copiedNumber, setCopiedNumber] = useState(false);
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);
   const [note, setNote] = useState('');
@@ -112,7 +116,7 @@ export const QuickOrderModal: React.FC = () => {
     setCouponApplied(true);
   };
 
-  const handleSubmitOrder = (e: React.FormEvent) => {
+  const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
 
@@ -142,33 +146,84 @@ export const QuickOrderModal: React.FC = () => {
       return;
     }
 
+    // Real Payment verification for bKash / Nagad
+    let cleanSender = '';
+    if (paymentMethod !== 'cod') {
+      cleanSender = senderNumber.replace(/[^0-9]/g, '');
+      if (cleanSender.length !== 11 || !cleanSender.startsWith('01')) {
+        setErrorMessage(
+          `দয়া করে যে ${paymentMethod === 'bkash' ? 'বিকাশ' : 'নগদ'} নম্বর থেকে টাকা পাঠিয়েছেন সেই ১১ ডিজিটের মোবাইল নম্বরটি লিখুন।`
+        );
+        return;
+      }
+      if (!trxId.trim() || trxId.trim().length < 6) {
+        setErrorMessage(
+          `দয়া করে আপনার পেমেন্টের সঠিক ট্রানজেকশন আইডি (TrxID) লিখুন (যেমন: BJD82XKD)।`
+        );
+        return;
+      }
+    }
+
     setIsSubmitting(true);
+    setErrorMessage('');
 
-    const generatedOrderId = `UK-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName: name.trim(),
+          phoneNumber: cleanPhone,
+          district: district,
+          upazila: upazila,
+          address: addressDetails.trim(),
+          notes: note.trim(),
+          deliveryZone: isDhaka ? 'inside-dhaka' : 'outside-dhaka',
+          paymentMethod: paymentMethod,
+          advancePlan: paymentMethod !== 'cod' ? parseInt(advancePlan, 10) : 0,
+          paymentTrxId: paymentMethod !== 'cod' ? trxId.trim().toUpperCase() : null,
+          paymentSenderNumber: paymentMethod !== 'cod' ? cleanSender : null,
+          items: orderItems.map((item) => ({
+            id: item.productId || item.id,
+            name: item.productName,
+            weight: item.weight,
+            price: item.price,
+            quantity: item.quantity,
+            image: item.imageUrl,
+          })),
+        }),
+      });
 
-    const fullAddress = `${addressDetails.trim()}, উপজেলা/থানা: ${upazila}, জেলা: ${district}`;
+      const data = await res.json();
+      if (!res.ok) {
+        setErrorMessage(data.error || 'অর্ডার করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+        setIsSubmitting(false);
+        return;
+      }
 
-    const orderData: OrderSubmission = {
-      orderId: generatedOrderId,
-      customerName: name.trim(),
-      phoneNumber: cleanPhone,
-      address: fullAddress,
-      deliveryZone: isDhaka ? 'inside-dhaka' : 'outside-dhaka',
-      deliveryCharge: deliveryCharge,
-      notes: note.trim(),
-      district: district,
-      upazila: upazila,
-      paymentMethod: paymentMethod,
-      advancePlan: paymentMethod !== 'cod' ? advancePlan : undefined,
-      advanceAmount: paymentMethod !== 'cod' ? advanceAmount : undefined,
-      dueAmount: paymentMethod !== 'cod' ? dueAmount : undefined,
-      items: orderItems,
-      subtotal: subtotal,
-      total: grandTotal,
-      createdAt: new Date().toISOString(),
-    };
+      const createdOrder = data.order;
+      const fullAddress = `${createdOrder.address}, উপজেলা/থানা: ${createdOrder.upazila}, জেলা: ${createdOrder.district}`;
 
-    setTimeout(() => {
+      const orderData: OrderSubmission = {
+        orderId: createdOrder.orderCode,
+        customerName: createdOrder.customerName,
+        phoneNumber: createdOrder.phoneNumber,
+        address: fullAddress,
+        deliveryZone: createdOrder.deliveryZone as any,
+        deliveryCharge: createdOrder.deliveryCharge,
+        notes: createdOrder.notes || '',
+        district: createdOrder.district,
+        upazila: createdOrder.upazila,
+        paymentMethod: createdOrder.paymentMethod as any,
+        advancePlan: createdOrder.advancePlan > 0 ? (createdOrder.advancePlan as any) : undefined,
+        advanceAmount: createdOrder.advanceAmount,
+        dueAmount: createdOrder.dueAmount,
+        items: orderItems,
+        subtotal: createdOrder.subtotal,
+        total: createdOrder.totalAmount,
+        createdAt: createdOrder.createdAt,
+      };
+
       try {
         confetti({
           particleCount: 120,
@@ -182,8 +237,12 @@ export const QuickOrderModal: React.FC = () => {
       setSubmittedOrder(orderData);
       setLastOrder(orderData);
       clearCart();
+    } catch (err) {
+      console.error(err);
+      setErrorMessage('সার্ভারের সাথে সংযোগ ব্যর্থ হয়েছে। ইন্টারনেট কানেকশন চেক করুন।');
+    } finally {
       setIsSubmitting(false);
-    }, 600);
+    }
   };
 
   const handleModalClose = () => {
@@ -757,6 +816,98 @@ export const QuickOrderModal: React.FC = () => {
                                 Full payment advance
                               </span>
                             </label>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Real bKash / Nagad Payment Instructions & Verification Inputs */}
+                      {paymentMethod !== 'cod' && (
+                        <div
+                          className={`rounded-xl p-3.5 border text-xs space-y-3 mt-3 ${
+                            paymentMethod === 'bkash'
+                              ? 'bg-pink-50/80 border-[#e2136e]/30'
+                              : 'bg-orange-50/80 border-[#f7941d]/30'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between border-b pb-2 border-gray-200/80">
+                            <div className="flex items-center gap-1.5 font-bold text-gray-900">
+                              <span
+                                className={`w-4 h-4 rounded-full text-white text-[9px] font-bold flex items-center justify-center ${
+                                  paymentMethod === 'bkash' ? 'bg-[#e2136e]' : 'bg-[#f7941d]'
+                                }`}
+                              >
+                                {paymentMethod === 'bkash' ? 'ব' : 'ন'}
+                              </span>
+                              <span>
+                                {paymentMethod === 'bkash' ? 'বিকাশ' : 'নগদ'} পেমেন্ট নির্দেশিকা (Send Money)
+                              </span>
+                            </div>
+                            <span className="font-extrabold text-[#f48721]">
+                              প্রদেয়: ৳{advanceAmount.toLocaleString()}
+                            </span>
+                          </div>
+
+                          {/* Official Account Number with 1-click Copy */}
+                          <div className="bg-white rounded-lg p-2.5 border border-gray-200 flex items-center justify-between">
+                            <div>
+                              <span className="text-[10px] text-gray-500 block">
+                                উন্নত খাবার {paymentMethod === 'bkash' ? 'বিকাশ' : 'নগদ'} পার্সোনাল নম্বর:
+                              </span>
+                              <span className="text-sm font-bold font-mono tracking-wider text-gray-900">
+                                01700-000000
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText('01700000000');
+                                setCopiedNumber(true);
+                                setTimeout(() => setCopiedNumber(false), 2000);
+                              }}
+                              className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded text-[11px] transition flex items-center gap-1 cursor-pointer"
+                            >
+                              {copiedNumber ? (
+                                <span className="text-green-600 font-bold">✓ কপি হয়েছে!</span>
+                              ) : (
+                                <span>নম্বর কপি</span>
+                              )}
+                            </button>
+                          </div>
+
+                          <p className="text-[11px] text-gray-600 leading-relaxed">
+                            💡 ওপরের নম্বরে আপনার {paymentMethod === 'bkash' ? 'বিকাশ' : 'নগদ'} অ্যাপ থেকে{' '}
+                            <strong>৳{advanceAmount}</strong> সেন্ড মানি করুন। পেমেন্ট সম্পন্ন হওয়ার পর
+                            ট্রানজেকশন আইডি (TrxID) ও প্রেরক নম্বরটি নিচে লিখে অর্ডার নিশ্চিত করুন:
+                          </p>
+
+                          {/* Sender Phone Input */}
+                          <div>
+                            <label className="block text-[11px] font-bold text-gray-800 mb-1">
+                              যে নম্বর থেকে টাকা পাঠিয়েছেন (Sender Number) *
+                            </label>
+                            <input
+                              type="tel"
+                              required
+                              placeholder="01XXXXXXXXX"
+                              value={senderNumber}
+                              onChange={(e) => setSenderNumber(e.target.value)}
+                              className="w-full bg-white border border-gray-300 rounded-lg py-1.5 px-3 text-xs text-gray-800 font-mono focus:outline-none focus:border-[#f48721]"
+                            />
+                          </div>
+
+                          {/* TrxID Input */}
+                          <div>
+                            <label className="block text-[11px] font-bold text-gray-800 mb-1">
+                              ট্রানজেকশন আইডি (Transaction ID / TrxID) *
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              placeholder="যেমন: BJD928XKD"
+                              value={trxId}
+                              onChange={(e) => setTrxId(e.target.value)}
+                              className="w-full bg-white border border-gray-300 rounded-lg py-1.5 px-3 text-xs text-gray-800 font-mono uppercase focus:outline-none focus:border-[#f48721]"
+                            />
                           </div>
                         </div>
                       )}

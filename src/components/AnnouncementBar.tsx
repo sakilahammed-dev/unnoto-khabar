@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Truck, Phone, MessageCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Truck, Phone, MessageCircle, MapPin } from 'lucide-react';
 
 export const AnnouncementBar: React.FC = () => {
   return (
@@ -13,8 +14,16 @@ export const AnnouncementBar: React.FC = () => {
           <span>সারা দেশে ক্যাশ অন ডেলিভারি | পণ্য হাতে পেয়ে মূল্য পরিশোধের সুবিধা</span>
         </div>
 
-        {/* Right contacts */}
+        {/* Right contacts & Track Order */}
         <div className="flex items-center gap-4 text-xs">
+          <Link
+            href="/track"
+            className="flex items-center gap-1 text-amber-300 hover:text-white font-bold transition"
+          >
+            <MapPin className="w-3 h-3 text-[#f48721]" />
+            <span>অর্ডার ট্র্যাকিং</span>
+          </Link>
+
           <a
             href="tel:+8801700000000"
             className="flex items-center gap-1.5 hover:text-[#f48721] transition"
