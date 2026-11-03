@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, ShoppingCart, X, ChevronRight, Menu, Home } from 'lucide-react';
+import { Search, ShoppingCart, X, ChevronRight, Menu } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { searchProducts } from '@/data/catalog';
 import { Product } from '@/types';
@@ -30,38 +30,57 @@ export const Header: React.FC = () => {
     setSelectedCategory,
     navigateToCategory,
     isMobileMenuOpen,
-    setIsMobileMenuOpen
+    setIsMobileMenuOpen,
+    searchQuery,
+    setSearchQuery,
   } = useCart();
-  const [searchInput, setSearchInput] = useState('');
+
+  const [searchInput, setSearchInput] = useState(searchQuery || '');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [activeNavCategory, setActiveNavCategory] = useState<string | null>(null);
-  const searchRef = useRef<HTMLDivElement>(null);
+
+  const desktopSearchRef = useRef<HTMLDivElement>(null);
+  const mobileSearchRef = useRef<HTMLDivElement>(null);
+
+  // Sync searchInput when searchQuery is cleared elsewhere (e.g. from Clear button on page)
+  useEffect(() => {
+    setSearchInput(searchQuery);
+  }, [searchQuery]);
 
   // Live search handler
   useEffect(() => {
-    if (searchInput.trim().length > 1) {
-      const results = searchProducts(searchInput);
-      setSearchResults(results.slice(0, 6));
+    const q = searchInput.trim();
+    if (q.length >= 1) {
+      const results = searchProducts(q);
+      setSearchResults(results.slice(0, 8));
     } else {
       setSearchResults([]);
     }
   }, [searchInput]);
 
-  // Click outside search results to close
+  // Click outside search results to close on both Desktop & Mobile
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node;
+      const inDesktop = desktopSearchRef.current?.contains(target);
+      const inMobile = mobileSearchRef.current?.contains(target);
+      if (!inDesktop && !inMobile) {
         setIsSearchFocused(false);
       }
     };
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, []);
 
   // Scroll spy to highlight active category in navbar when on home page
   useEffect(() => {
-    if (selectedCategory !== null) {
+    if (selectedCategory !== null || searchQuery.trim().length > 0) {
       setActiveNavCategory(null);
       return;
     }
@@ -78,8 +97,6 @@ export const Header: React.FC = () => {
 
       if (firstCatEl) {
         const firstRect = firstCatEl.getBoundingClientRect();
-        // স্টিকি হেডার (~৬৪px)। যদি প্রথম ক্যাটাগরির টপ এখনও ১৮০px এর নিচে থাকে,
-        // তাহলে ইউজার এখনও হিরো ব্যানার, ক্যাটাগরি শোকেস, নোটিশ বা 'সকল পণ্য' হেডলাইনে আছে
         if (firstRect.top > 180) {
           setActiveNavCategory(null);
           return;
@@ -107,7 +124,6 @@ export const Header: React.FC = () => {
       }
     };
 
-    // মাউন্ট হওয়ার সাথে সাথে রান হবে
     updateActiveNav();
 
     let ticking = false;
@@ -128,11 +144,34 @@ export const Header: React.FC = () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
-  }, [selectedCategory]);
+  }, [selectedCategory, searchQuery]);
 
+  // Handle Search Submission (Enter or Click)
+  const handleSearchSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const query = searchInput.trim();
+    if (query) {
+      setSearchQuery(query);
+      setIsSearchFocused(false);
+      setSelectedCategory(null);
+      const el = document.getElementById('catalog-products-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
+  // Clear Search
+  const handleClearSearch = () => {
+    setSearchInput('');
+    setSearchQuery('');
+    setSearchResults([]);
+    setIsSearchFocused(false);
+  };
+
+  // Select item from live dropdown
   const handleSelectSearchResult = (product: Product) => {
     setIsSearchFocused(false);
-    setSearchInput('');
     const primaryVariant = product.variants[0];
     openQuickOrder({
       id: `${product.id}_${primaryVariant.id}`,
@@ -149,6 +188,8 @@ export const Header: React.FC = () => {
 
   const handleHomeClick = () => {
     setSelectedCategory(null);
+    setSearchQuery('');
+    setSearchInput('');
     setActiveNavCategory(null);
     setIsMobileMenuOpen(false);
     if (typeof window !== 'undefined') {
@@ -158,12 +199,16 @@ export const Header: React.FC = () => {
 
   const handleCategoryNavClick = (catId: string) => {
     setIsMobileMenuOpen(false);
+    setSearchQuery('');
+    setSearchInput('');
     setActiveNavCategory(catId);
     navigateToCategory(catId);
   };
 
   const handleSpecialOffersClick = () => {
     setIsMobileMenuOpen(false);
+    setSearchQuery('');
+    setSearchInput('');
     setActiveNavCategory(null);
     navigateToCategory('special-offers');
   };
@@ -177,7 +222,7 @@ export const Header: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-1.5 rounded-md text-gray-700 hover:bg-pink-50 lg:hidden"
+              className="p-1.5 rounded-md text-gray-700 hover:bg-pink-50 lg:hidden cursor-pointer"
               aria-label="মেনু খুলুন"
             >
               <Menu className="w-6 h-6" />
@@ -209,23 +254,24 @@ export const Header: React.FC = () => {
             <button
               type="button"
               onClick={handleHomeClick}
-              className={`flex items-center gap-1.5 px-2 xl:px-2.5 2xl:px-3 py-1.5 rounded-md transition whitespace-nowrap cursor-pointer ${
-                selectedCategory === null && activeNavCategory === null
+              className={`px-2.5 xl:px-3 py-1.5 rounded-full transition whitespace-nowrap cursor-pointer ${
+                selectedCategory === null && !searchQuery
                   ? 'text-[#f48721] bg-orange-50 font-extrabold shadow-2xs'
-                  : 'text-[#222831] hover:text-[#f48721] hover:bg-pink-50/80 font-bold'
+                  : 'text-[#222831] hover:text-[#f48721] hover:bg-pink-50/80'
               }`}
             >
-              <Home className="w-4 h-4 text-[#f48721]" />
-              <span>হোম</span>
+              সকল পণ্য
             </button>
             {NAV_CATEGORIES.map((cat) => {
-              const isActive = selectedCategory === null ? activeNavCategory === cat.id : selectedCategory === cat.id;
+              const isActive =
+                selectedCategory === cat.id ||
+                (selectedCategory === null && !searchQuery && activeNavCategory === cat.id);
               return (
                 <button
                   key={cat.id}
                   type="button"
                   onClick={() => handleCategoryNavClick(cat.id)}
-                  className={`px-1.5 xl:px-2 2xl:px-2.5 py-1.5 rounded-md transition whitespace-nowrap cursor-pointer ${
+                  className={`px-2.5 xl:px-3 py-1.5 rounded-full transition whitespace-nowrap cursor-pointer ${
                     isActive
                       ? 'text-[#f48721] bg-orange-50 font-extrabold shadow-2xs'
                       : 'text-[#222831] hover:text-[#f48721] hover:bg-pink-50/80 font-bold'
@@ -251,71 +297,99 @@ export const Header: React.FC = () => {
           {/* 3. Right: Compact Search Bar & Shopping Cart */}
           <div className="flex items-center gap-2 xl:gap-3 shrink-0">
             {/* Highlighted Search Bar (Desktop) */}
-            <div ref={searchRef} className="hidden md:block relative w-36 lg:w-44 xl:w-52">
-              <div className="relative w-full flex items-center group">
+            <div ref={desktopSearchRef} className="hidden md:block relative w-40 lg:w-48 xl:w-56">
+              <form onSubmit={handleSearchSubmit} className="relative w-full flex items-center group">
                 <input
                   type="text"
                   placeholder="পণ্য সার্চ করুন..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
-                  className="w-full bg-white border-2 border-black hover:border-gray-800 focus:border-black focus:ring-2 focus:ring-gray-300 rounded-full py-1.5 pl-3.5 pr-9 text-xs xl:text-[13px] font-semibold text-[#222831] placeholder:text-gray-500 shadow-2xs transition"
+                  className="w-full bg-white border-2 border-black hover:border-gray-800 focus:border-[#1b5e20] focus:ring-2 focus:ring-green-100 rounded-full py-1.5 pl-3.5 pr-14 text-xs xl:text-[13px] font-semibold text-[#222831] placeholder:text-gray-500 shadow-2xs transition"
                 />
                 {searchInput ? (
                   <button
                     type="button"
-                    onClick={() => setSearchInput('')}
-                    className="absolute right-8 text-gray-400 hover:text-gray-600 p-0.5 cursor-pointer"
+                    onClick={handleClearSearch}
+                    className="absolute right-8 text-gray-400 hover:text-gray-700 p-0.5 cursor-pointer"
+                    title="মুছুন"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
                 ) : null}
                 <button
-                  type="button"
+                  type="submit"
                   className="absolute right-1 w-7 h-7 bg-[#222831] hover:bg-black text-white rounded-full flex items-center justify-center transition shadow-2xs shrink-0 cursor-pointer"
                   aria-label="সার্চ করুন"
+                  title="সার্চ করুন"
                 >
                   <Search className="w-3.5 h-3.5 stroke-[2.5]" />
                 </button>
-              </div>
+              </form>
 
-              {/* Search Dropdown */}
-              {isSearchFocused && searchResults.length > 0 && (
-                <div className="absolute top-full right-0 mt-1 w-72 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-50">
-                  <div className="p-2 border-b border-gray-100 text-xs font-semibold text-gray-500 bg-gray-50 flex justify-between">
-                    <span>ফলাফল ({searchResults.length})</span>
-                    <span>অর্ডার করতে ক্লিক করুন</span>
-                  </div>
-                  <div className="divide-y divide-gray-100 max-h-80 overflow-y-auto">
-                    {searchResults.map((product) => (
-                      <div
-                        key={product.id}
-                        onClick={() => handleSelectSearchResult(product)}
-                        className="p-2.5 hover:bg-gray-50 cursor-pointer flex items-center justify-between transition"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <div className="relative w-10 h-10 rounded border border-gray-100 overflow-hidden shrink-0">
-                            <Image
-                              src={product.imageUrl}
-                              alt={product.banglaName}
-                              fill
-                              sizes="40px"
-                              className="object-cover"
-                            />
-                          </div>
-                          <div>
-                            <h4 className="text-xs font-medium text-[#222831] line-clamp-1">
-                              {product.banglaName}
-                            </h4>
-                            <span className="text-[11px] font-bold text-[#f48721]">
-                              ৳{product.variants[0].price}
-                            </span>
-                          </div>
-                        </div>
-                        <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+              {/* Desktop Search Dropdown */}
+              {isSearchFocused && (
+                <div className="absolute top-full right-0 mt-1.5 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-150">
+                  {searchResults.length > 0 ? (
+                    <>
+                      <div className="p-2.5 border-b border-gray-100 text-xs font-semibold text-gray-500 bg-gray-50 flex justify-between items-center">
+                        <span className="font-bold text-gray-700">পণ্য তালিকা ({searchResults.length})</span>
+                        <span className="text-[11px] text-gray-400">ক্লিক করে অর্ডার করুন</span>
                       </div>
-                    ))}
-                  </div>
+                      <div className="divide-y divide-gray-100 max-h-80 overflow-y-auto">
+                        {searchResults.map((product) => (
+                          <div
+                            key={product.id}
+                            onClick={() => handleSelectSearchResult(product)}
+                            className="p-2.5 hover:bg-orange-50/50 cursor-pointer flex items-center justify-between transition group"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className="relative w-10 h-10 rounded-lg border border-gray-100 overflow-hidden shrink-0 bg-gray-50">
+                                <Image
+                                  src={product.imageUrl}
+                                  alt={product.banglaName}
+                                  fill
+                                  sizes="40px"
+                                  className="object-cover group-hover:scale-105 transition-transform"
+                                />
+                              </div>
+                              <div className="pr-1">
+                                <h4 className="text-xs font-bold text-[#222831] line-clamp-1 group-hover:text-[#f48721] transition">
+                                  {product.banglaName}
+                                </h4>
+                                <div className="flex items-center gap-2 mt-0.5">
+                                  <span className="text-[11px] font-extrabold text-[#1b5e20] font-mono">
+                                    ৳{product.variants[0].price}
+                                  </span>
+                                  {product.variants[0].originalPrice > product.variants[0].price && (
+                                    <span className="text-[10px] text-gray-400 line-through font-mono">
+                                      ৳{product.variants[0].originalPrice}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#f48721] group-hover:translate-x-0.5 transition-all" />
+                          </div>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleSearchSubmit()}
+                        className="w-full p-2.5 bg-orange-50 hover:bg-orange-100 text-[#f48721] text-xs font-bold text-center border-t border-orange-100 transition flex items-center justify-center gap-1 cursor-pointer"
+                      >
+                        <span>&ldquo;{searchInput}&rdquo;-এর সকল ফলাফল দেখুন ({searchResults.length}টি)</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </>
+                  ) : searchInput.trim().length >= 1 ? (
+                    <div className="p-4 text-center text-xs text-gray-500 bg-white">
+                      <p className="font-bold text-gray-800">কোনো পণ্য পাওয়া যায়নি</p>
+                      <p className="text-[11px] text-gray-400 mt-1">
+                        &ldquo;মধু&rdquo;, &ldquo;খেজুর&rdquo;, &ldquo;বাদাম&rdquo;, &ldquo;তেল&rdquo; ইত্যাদি লিখে খুঁজুন
+                      </p>
+                    </div>
+                  ) : null}
                 </div>
               )}
             </div>
@@ -342,64 +416,89 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Mobile Search Input */}
-        <div className="pb-3 md:hidden">
-          <div className="relative flex items-center">
+        <div ref={mobileSearchRef} className="pb-3 md:hidden relative">
+          <form onSubmit={handleSearchSubmit} className="relative flex items-center">
             <input
               type="text"
               placeholder="পণ্য সার্চ করুন..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onFocus={() => setIsSearchFocused(true)}
-              className="w-full bg-white border-2 border-r-0 border-black focus:border-black rounded-l-full py-2 pl-4 pr-9 text-xs font-semibold text-[#222831] placeholder:text-gray-500 focus:outline-none shadow-2xs"
+              className="w-full bg-white border-2 border-r-0 border-black focus:border-[#1b5e20] rounded-l-full py-2 pl-4 pr-9 text-xs font-semibold text-[#222831] placeholder:text-gray-500 focus:outline-none shadow-2xs"
             />
-            {searchInput && (
+            {searchInput ? (
               <button
                 type="button"
-                onClick={() => setSearchInput('')}
-                className="absolute right-12 text-gray-400"
+                onClick={handleClearSearch}
+                className="absolute right-12 text-gray-400 hover:text-gray-600 p-1 cursor-pointer"
+                title="মুছুন"
               >
                 <X className="w-4 h-4" />
               </button>
-            )}
+            ) : null}
             <button
-              type="button"
+              type="submit"
               className="bg-[#222831] hover:bg-black text-white px-4 py-2.5 rounded-r-full shrink-0 border-2 border-l-0 border-black shadow-2xs cursor-pointer flex items-center justify-center"
+              aria-label="সার্চ করুন"
             >
               <Search className="w-4 h-4 stroke-[2.5]" />
             </button>
-          </div>
+          </form>
 
           {/* Mobile search dropdown */}
-          {isSearchFocused && searchResults.length > 0 && (
-            <div className="mt-1 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden divide-y divide-gray-100 max-h-72 overflow-y-auto">
-              {searchResults.map((product) => (
-                <div
-                  key={product.id}
-                  onClick={() => handleSelectSearchResult(product)}
-                  className="p-2.5 flex items-center justify-between active:bg-gray-50"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <div className="relative w-10 h-10 rounded border border-gray-200 overflow-hidden shrink-0">
-                      <Image
-                        src={product.imageUrl}
-                        alt={product.banglaName}
-                        fill
-                        sizes="40px"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-medium text-[#222831] line-clamp-1">
-                        {product.banglaName}
-                      </h4>
-                      <span className="text-[11px] text-[#f48721] font-bold">
-                        ৳{product.variants[0].price}
-                      </span>
-                    </div>
+          {isSearchFocused && (
+            <div className="mt-1.5 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden divide-y divide-gray-100 max-h-80 overflow-y-auto">
+              {searchResults.length > 0 ? (
+                <>
+                  <div className="p-2 border-b border-gray-100 text-[11px] font-bold text-gray-500 bg-gray-50 flex justify-between">
+                    <span>পণ্য তালিকা ({searchResults.length})</span>
+                    <span>অর্ডারের জন্য ট্যাপ করুন</span>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                  {searchResults.map((product) => (
+                    <div
+                      key={product.id}
+                      onClick={() => handleSelectSearchResult(product)}
+                      className="p-2.5 flex items-center justify-between active:bg-orange-50/50 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="relative w-10 h-10 rounded-lg border border-gray-100 overflow-hidden shrink-0 bg-gray-50">
+                          <Image
+                            src={product.imageUrl}
+                            alt={product.banglaName}
+                            fill
+                            sizes="40px"
+                            className="object-cover"
+                          />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-[#222831] line-clamp-1">
+                            {product.banglaName}
+                          </h4>
+                          <span className="text-[11px] text-[#1b5e20] font-extrabold font-mono">
+                            ৳{product.variants[0].price}
+                          </span>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-400" />
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => handleSearchSubmit()}
+                    className="w-full p-2.5 bg-orange-50 text-[#f48721] text-xs font-bold text-center border-t border-orange-100 flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <span>&ldquo;{searchInput}&rdquo;-এর সকল ফলাফল দেখুন</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </>
+              ) : searchInput.trim().length >= 1 ? (
+                <div className="p-4 text-center text-xs text-gray-500 bg-white">
+                  <p className="font-bold text-gray-800">কোনো পণ্য পাওয়া যায়নি</p>
+                  <p className="text-[11px] text-gray-400 mt-1">
+                    &ldquo;মধু&rdquo;, &ldquo;খেজুর&rdquo;, &ldquo;বাদাম&rdquo;, &ldquo;তেল&rdquo; লিখে খুঁজুন
+                  </p>
                 </div>
-              ))}
+              ) : null}
             </div>
           )}
         </div>

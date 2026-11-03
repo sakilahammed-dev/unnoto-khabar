@@ -1923,14 +1923,151 @@ export const getProductById = (id: string): Product | undefined => {
   return PRODUCTS_CATALOG.find((p) => p.id === id);
 };
 
+// Comprehensive transliteration & phonetic synonym dictionary for search
+const PHONETIC_SEARCH_SYNONYMS: Record<string, string[]> = {
+  // Honey
+  modhu: ['মধু', 'honey', 'কাঁচা মধু'],
+  modu: ['মধু', 'honey'],
+  honey: ['মধু', 'honey'],
+  chaker: ['চাকের', 'মধু'],
+  khalisha: ['খলিশা'],
+  shundorbon: ['সুন্দরবন'],
+  sundarban: ['সুন্দরবন'],
+  sundarbans: ['সুন্দরবন'],
+
+  // Honey Nuts & Nuts
+  honeynuts: ['হানি নাটস', 'হানি নাট'],
+  badam: ['বাদাম', 'nuts', 'almond', 'cashew', 'কাঠবাদাম', 'কাজু'],
+  badham: ['বাদাম', 'nuts'],
+  kaju: ['কাজু', 'cashew'],
+  cashew: ['কাজু', 'cashew'],
+  pesta: ['পেস্তা', 'pistachio'],
+  pistachio: ['পেস্তা', 'pistachio'],
+  katbadam: ['কাঠবাদাম', 'almond'],
+  kathbadam: ['কাঠবাদাম', 'almond'],
+  almond: ['কাঠবাদাম', 'almond'],
+  walnut: ['আখরোট'],
+  akhrot: ['আখরোট'],
+  kishmish: ['কিশমিশ', 'raisin'],
+  kismis: ['কিশমিশ'],
+  raisin: ['কিশমিশ'],
+
+  // Dates
+  khejur: ['খেজুর', 'dates', 'আজওয়া', 'মরিয়ম', 'সুক্কারি', 'মেদজুল'],
+  kejur: ['খেজুর', 'dates'],
+  dates: ['খেজুর', 'dates'],
+  date: ['খেজুর', 'dates'],
+  ajwa: ['আজওয়া', 'আজওয়া'],
+  ajwah: ['আজওয়া'],
+  maryam: ['মরিয়ম', 'মরিয়ম'],
+  mariam: ['মরিয়ম'],
+  moriyom: ['মরিয়ম'],
+  moriom: ['মরিয়ম'],
+  sukkari: ['সুক্কারি'],
+  medjool: ['মেদজুল'],
+  medjul: ['মেদজুল'],
+  anbara: ['আম্বর'],
+  amber: ['আম্বর'],
+
+  // Oil & Ghee
+  tel: ['তেল', 'oil', 'সরিষা', 'কালোজিরা'],
+  tail: ['তেল', 'oil'],
+  oil: ['তেল', 'oil'],
+  sorisha: ['সরিষা', 'mustard'],
+  shorisha: ['সরিষা', 'mustard'],
+  mustard: ['সরিষা', 'mustard'],
+  kalijira: ['কালোজিরা', 'black seed'],
+  kalojira: ['কালোজিরা', 'black seed'],
+  ghee: ['ঘি', 'ghee', 'গাওয়া'],
+  ghi: ['ঘি', 'ghee'],
+  gawa: ['গাওয়া', 'ঘি'],
+  pure: ['খাঁটি', 'pure'],
+  khati: ['খাঁটি', 'pure'],
+
+  // Fish & Shutki
+  shutki: ['শুঁটকি', 'fish', 'চিংড়ি', 'লইট্টা', 'রূপচাঁদা'],
+  sutki: ['শুঁটকি', 'fish'],
+  fish: ['শুঁটকি', 'মাছ'],
+  balachaw: ['বালাচাও'],
+  loitta: ['লইট্টা'],
+  rupchanda: ['রূপচাঁদা'],
+  chingri: ['চিংড়ি', 'চিংড়ি'],
+  chingree: ['চিংড়ি'],
+
+  // Seeds
+  seed: ['সিড', 'বীজ'],
+  seeds: ['সিডস', 'বীজ'],
+  chia: ['চিয়া', 'চিয়া', 'chia'],
+  chya: ['চিয়া'],
+  tishi: ['তিসি'],
+  flax: ['তিসি', 'flax'],
+  flaxseed: ['তিসি'],
+  surjomukhi: ['সূর্যমুখী'],
+  sunflower: ['সূর্যমুখী'],
+  kumra: ['মিষ্টি কুমড়া'],
+  pumpkin: ['কুমড়া', 'pumpkin'],
+
+  // Health Mix & Snacks
+  health: ['স্বাস্থ্য', 'হেলথ', 'health'],
+  mix: ['মিক্স', 'mix'],
+  satu: ['ছাতু'],
+  chatu: ['ছাতু'],
+  shatu: ['ছাতু'],
+  oats: ['ওটস'],
+
+  // Pickles & Spices
+  achar: ['আচার', 'pickle'],
+  achhar: ['আচার'],
+  pickle: ['আচার', 'pickle'],
+  aam: ['আম', 'mango'],
+  mango: ['আম', 'mango'],
+  boroi: ['বরই', 'কুল'],
+  tetul: ['তেঁতুল'],
+  moshla: ['মসলা', 'spices'],
+  mosla: ['মসলা'],
+  spice: ['মসলা'],
+  spices: ['মসলা'],
+  roshun: ['রসুন', 'garlic'],
+  garlic: ['রসুন'],
+  elach: ['এলাচ', 'cardamom'],
+  cardamom: ['এলাচ'],
+  golmorich: ['গোলমরিচ', 'pepper'],
+};
+
 export const searchProducts = (query: string): Product[] => {
   const q = query.toLowerCase().trim();
   if (!q) return [];
-  return PRODUCTS_CATALOG.filter(
-    (p) =>
-      p.name.toLowerCase().includes(q) ||
-      p.banglaName.toLowerCase().includes(q) ||
-      p.categoryName.toLowerCase().includes(q) ||
-      p.shortDescription.toLowerCase().includes(q)
-  );
+
+  // Break query into tokens
+  const tokens = q.split(/\s+/).filter(Boolean);
+
+  // Expand each token using synonyms
+  const expandedTerms = new Set<string>();
+  expandedTerms.add(q);
+  tokens.forEach((t) => {
+    expandedTerms.add(t);
+    const synonyms = PHONETIC_SEARCH_SYNONYMS[t] || [];
+    synonyms.forEach((s) => expandedTerms.add(s.toLowerCase()));
+  });
+
+  const termList = Array.from(expandedTerms);
+
+  return PRODUCTS_CATALOG.filter((p) => {
+    const searchableCorpus = [
+      p.name,
+      p.banglaName,
+      p.categoryName,
+      p.category,
+      p.shortDescription || '',
+      p.badge || '',
+      ...p.variants.map((v) => `${v.weight} ${v.price}`),
+    ]
+      .join(' ')
+      .toLowerCase();
+
+    // Match if full query is in corpus, OR any expanded term/synonym matches
+    if (searchableCorpus.includes(q)) return true;
+
+    return termList.some((term) => searchableCorpus.includes(term));
+  });
 };
