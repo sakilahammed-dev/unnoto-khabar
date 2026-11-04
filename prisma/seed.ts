@@ -21,9 +21,9 @@ async function main() {
         isActive: true,
       },
     });
-    console.log(`✅ Default admin created: ${admin.username} (${admin.name})`);
+    console.log(`Default admin created: ${admin.username} (${admin.name})`);
   } else {
-    console.log(`ℹ️ Admin user ${username} already exists.`);
+    console.log(`Admin user ${username} already exists.`);
   }
 }
 

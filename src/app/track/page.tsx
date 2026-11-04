@@ -201,7 +201,7 @@ export default function OrderTrackPage() {
                   <div className="py-8">
                     {isCancelled ? (
                       <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-center text-red-700">
-                        <p className="font-bold text-sm">❌ অর্ডারটি বাতিল করা হয়েছে</p>
+                        <p className="font-bold text-sm">অর্ডারটি বাতিল করা হয়েছে</p>
                         <p className="text-xs mt-1">বিস্তারিত তথ্যের জন্য আমাদের কাস্টমার সার্ভিসে যোগাযোগ করুন।</p>
                       </div>
                     ) : (

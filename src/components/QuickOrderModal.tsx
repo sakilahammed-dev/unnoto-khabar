@@ -875,7 +875,7 @@ export const QuickOrderModal: React.FC = () => {
                           </div>
 
                           <p className="text-[11px] text-gray-600 leading-relaxed">
-                            💡 ওপরের নম্বরে আপনার {paymentMethod === 'bkash' ? 'বিকাশ' : 'নগদ'} অ্যাপ থেকে{' '}
+                            ওপরের নম্বরে আপনার {paymentMethod === 'bkash' ? 'বিকাশ' : 'নগদ'} অ্যাপ থেকে{' '}
                             <strong>৳{advanceAmount}</strong> সেন্ড মানি করুন। পেমেন্ট সম্পন্ন হওয়ার পর
                             ট্রানজেকশন আইডি (TrxID) ও প্রেরক নম্বরটি নিচে লিখে অর্ডার নিশ্চিত করুন:
                           </p>

@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
         {/* Error Alert */}
         {errorMessage && (
           <div className="mb-6 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center gap-2 animate-shake">
-            <span className="font-bold">⚠️</span> {errorMessage}
+            {errorMessage}
           </div>
         )}
 

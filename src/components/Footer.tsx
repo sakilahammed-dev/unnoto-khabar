@@ -84,7 +84,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-1.5 text-xs text-gray-600">
               <li>
                 <Link href="/track" className="text-[#1b5e20] font-bold hover:text-[#f48721] transition flex items-center gap-1">
-                  📦 অর্ডার ট্র্যাক করুন
+                  অর্ডার ট্র্যাক করুন
                 </Link>
               </li>
               <li>
