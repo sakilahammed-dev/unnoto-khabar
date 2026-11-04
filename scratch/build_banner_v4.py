@@ -72,7 +72,7 @@ def build_banner_v4():
     banner.alpha_composite(headline_clean, (62, 85))
 
     # =========================================================================
-    # STEP 4: RENDER 'এখনি অর্ডার করুন ➔' CTA BUTTON BELOW 'সমাহার'
+    # STEP 4: RENDER 'এখনি অর্ডার করুন ->' CTA BUTTON BELOW 'সমাহার'
     # =========================================================================
     # Position: x=118, y=346 (width 230, height 48)
     btn_x, btn_y = 118, 346

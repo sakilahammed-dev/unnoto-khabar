@@ -702,7 +702,7 @@ export const QuickOrderModal: React.FC = () => {
                       </div>
                       {couponApplied && (
                         <p className="text-[10px] text-green-600 mt-1 font-medium">
-                          ✓ কুপন কোড গ্রহণ করা হয়েছে!
+                          কুপন কোড গ্রহণ করা হয়েছে!
                         </p>
                       )}
                     </div>
@@ -867,7 +867,7 @@ export const QuickOrderModal: React.FC = () => {
                               className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded text-[11px] transition flex items-center gap-1 cursor-pointer"
                             >
                               {copiedNumber ? (
-                                <span className="text-green-600 font-bold">✓ কপি হয়েছে!</span>
+                                <span className="text-green-600 font-bold">কপি হয়েছে!</span>
                               ) : (
                                 <span>নম্বর কপি</span>
                               )}

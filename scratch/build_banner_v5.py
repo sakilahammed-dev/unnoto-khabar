@@ -17,7 +17,7 @@ def build_banner_v5():
     # Order matches user upload exactly: হানি নাট, মধু, কালোজিরা তেল, খেজুর
     circles_user = [c_nuts, c_honey, c_oil, c_dates]
 
-    # Perfectly spaced below the 'এখনি অর্ডার করুন ➔' CTA button
+    # Perfectly spaced below the 'এখনি অর্ডার করুন ->' CTA button
     size = 84
     start_x = 42
     gap = 24
