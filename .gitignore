@@ -42,3 +42,4 @@ prisma/*.db-journal
 
 # Finder (MacOS) folder config
 .DS_Store
+.vercel
